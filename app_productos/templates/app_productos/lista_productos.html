@@ -1,0 +1,56 @@
+{% extends 'app_productos/base.html' %}
+
+{% block title %}Productos - Spa Management{% endblock %}
+
+{% block content %}
+<div class="row mb-4">
+    <div class="col-md-6">
+        <h1><i class="fas fa-boxes"></i> Nuestros Productos</h1>
+    </div>
+    <div class="col-md-6 text-end">
+        <a href="{% url 'app_productos:crear_producto' %}" class="btn btn-primary">
+            <i class="fas fa-plus"></i> Nuevo Producto
+        </a>
+    </div>
+</div>
+
+<div class="row">
+    {% for producto in productos %}
+    <div class="col-md-4 mb-4">
+        <div class="card h-100">
+            <div class="card-body">
+                <span class="badge bg-secondary mb-2">{{ producto.get_categoria_display }}</span>
+                <h5 class="card-title">{{ producto.nombre }}</h5>
+                <p class="card-text text-muted">{{ producto.descripcion|truncatewords:15 }}</p>
+                <div class="d-flex justify-content-between align-items-center">
+                    <span class="h5 text-primary">${{ producto.precio }}</span>
+                    <span class="badge {% if producto.stock > 10 %}bg-success{% else %}bg-warning{% endif %}">
+                        Stock: {{ producto.stock }}
+                    </span>
+                </div>
+            </div>
+            <div class="card-footer">
+                <div class="btn-group w-100">
+                    <a href="{% url 'app_productos:detalle_producto' producto.pk %}" class="btn btn-outline-primary btn-sm">
+                        <i class="fas fa-eye"></i>
+                    </a>
+                    <a href="{% url 'app_productos:editar_producto' producto.pk %}" class="btn btn-outline-secondary btn-sm">
+                        <i class="fas fa-edit"></i>
+                    </a>
+                    <a href="{% url 'app_productos:eliminar_producto' producto.pk %}" class="btn btn-outline-danger btn-sm">
+                        <i class="fas fa-trash"></i>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+    {% empty %}
+    <div class="col-12">
+        <div class="alert alert-info text-center">
+            <i class="fas fa-info-circle"></i> No hay productos registrados.
+            <a href="{% url 'app_productos:crear_producto' %}" class="alert-link">Crear el primer producto</a>
+        </div>
+    </div>
+    {% endfor %}
+</div>
+{% endblock %}
